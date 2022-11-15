@@ -49,6 +49,7 @@ public:
 
     int removeAt(int index);
     bool remove(int value);
+    void clear();
 
     int at(int index);
     ListNode* nodeAt(int index);
@@ -150,6 +151,9 @@ bool List::remove(int value)
     return false;
 }
 
+void List::clear() {
+    while(!isEmpty()) removeHead();
+}
 
 ListNode* List::nodeAt(int index) {
     if(index < 0){

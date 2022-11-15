@@ -19,11 +19,11 @@ using namespace std;
 
 class Set
 {
-private: 
+private:
 	List* list;
-	int set_size;
+	int set_size = 0;
 public:
-	Set();
+	Set() = default;
 	~Set();
 
 	bool contains(int value);
@@ -36,8 +36,52 @@ public:
 	Set* difference(Set&);
 
 	void print();
-	int size() { return set_size; }
+	int size() const { return set_size; }
 };
+
+Set::~Set() {
+    clear();
+    delete list;
+
+}
+
+bool Set::add(int value) {
+    set_size++;
+    return false;
+}
+
+bool Set::contains(int value) {
+    return list->contains(value);
+}
+
+bool Set::remove(int value) {
+    set_size--;
+    return list->remove(value);
+}
+
+void Set::clear() {
+    list->clear();
+    set_size = 0;
+}
+
+Set *Set::set_union(Set &) {
+    return nullptr;
+}
+
+Set *Set::intersection(Set &otherSet) {
+    Set *intersection = new Set();
+    for(int index = 0; index < this->size(); index++)
+        if(!otherSet.contains(this->list->at(index))) intersection->add(this->list->at(index));
+    return intersection;
+}
+
+Set *Set::difference(Set &) {
+    return nullptr;
+}
+
+void Set::print() {
+    const ListNode* node = list->getHead();
+}
 
 int main()
 {
