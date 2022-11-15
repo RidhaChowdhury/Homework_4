@@ -12,153 +12,175 @@
 // 
 //---------------------------------------------------------------------
 
+using namespace std;
+
 class ListNode
 {
-private: 
-	int data;
-	ListNode* prev;
-	ListNode* next;
+private:
+    int value;
+    ListNode* prev;
+    ListNode* next;
 
 public:
-	ListNode() { prev = next = NULL; }
-	ListNode(int d, ListNode* p, ListNode* n) { data = d; prev = p; next = n; }
+    ListNode() { prev = next = NULL; }
+    ListNode(int d, ListNode* p, ListNode* n) { value = d; prev = p; next = n; }
 
-	friend class List;
+    friend class List;
 };
 
 class List
 {
 private:
-	ListNode* head;
-	ListNode* tail;
+    ListNode* head;
+    ListNode* tail;
 
 public:
-	List() { head = tail = NULL; }
-	~List();
+    List() { head = tail = NULL; }
+    ~List();
 
-	bool isEmpty() { return head == NULL; }
-	bool contains(int value);
+    bool isEmpty() { return head == NULL; }
+    bool contains(int value);
 
-	void addToHead(int value);
-	void addToTail(int value);
+    void addToHead(int value);
+    void addToTail(int value);
 
-	int removeHead();
-	int removeTail();
+    int removeHead();
+    int removeTail();
 
-	int removeAt(int index);
-	bool remove(int value);
+    int removeAt(int index);
+    bool remove(int value);
 
-	int at(int index);
-	int valueOf(const ListNode* elem);
-	const ListNode* getNext(const ListNode* node);
-	const ListNode* getPrevious(const ListNode* node);
-	const ListNode* getHead() { return head; }
-	const ListNode* getTail() { return tail; }
+    int at(int index);
+    ListNode* nodeAt(int index);
+    ListNode* nodeWithValue(int value);
+    int valueOf(const ListNode* elem);
+    const ListNode* getNext(const ListNode* node);
+    const ListNode* getPrevious(const ListNode* node);
+    const ListNode* getHead() { return head; }
+    const ListNode* getTail() { return tail; }
 };
 
 List::~List()
 {
-	while (!isEmpty())
-		removeTail();
+    while (!isEmpty())
+        removeTail();
 }
 
 bool List::contains(int value)
 {
-	ListNode *temp = head;
-	while (temp != NULL && temp->data != value)
-		temp = temp->next;
+    ListNode *temp = head;
+    while (temp != nullptr && temp->value != value)
+        temp = temp->next;
 
-	return temp != NULL;
+    return temp != nullptr;
 }
 
 void List::addToHead(int value)
 {
-	if (isEmpty())
-	{
-		head = tail = new ListNode(value, NULL, NULL);
-	}
-	else
-	{
-		head = new ListNode(value, NULL, head);
-		head->next->prev = head;	
-	}
+    if (isEmpty())
+    {
+        head = tail = new ListNode(value, nullptr, nullptr);
+    }
+    else
+    {
+        head = new ListNode(value, nullptr, head);
+        head->next->prev = head;
+    }
 }
 
 void List::addToTail(int value)
 {
-	if (isEmpty())
-	{
-		head = tail = new ListNode(value, NULL, NULL);
-	}
-	else
-	{
-		tail = new ListNode(value, tail, NULL);
-		tail->prev->next = tail;
-	}
+    if (isEmpty())
+    {
+        head = tail = new ListNode(value, nullptr, nullptr);
+    }
+    else
+    {
+        tail = new ListNode(value, tail, nullptr);
+        tail->prev->next = tail;
+    }
 }
 
 int List::removeHead()
 {
-	int value = head->data;
-	if (head == tail)
-	{
-		delete tail;
-		head = tail = NULL;
-	}
-	else
-	{
-		head = head->next;
-		delete head->prev;
-		head->prev = NULL;
-	}
+    int value = head->value;
+    if (head == tail)
+    {
+        delete tail;
+        head = tail = NULL;
+    }
+    else
+    {
+        head = head->next;
+        delete head->prev;
+        head->prev = NULL;
+    }
 
-	return value;
+    return value;
 }
 
 int List::removeTail()
 {
-	int value = head->data;
-	if (head == tail)
-	{
-		delete tail;
-		head = tail = NULL;
-	}
-	else
-	{
-		tail = tail->prev;
-		delete tail->next;
-		tail->next = NULL;
-	}
+    int value = head->value;
+    if (head == tail)
+    {
+        delete tail;
+        head = tail = NULL;
+    }
+    else
+    {
+        tail = tail->prev;
+        delete tail->next;
+        tail->next = NULL;
+    }
 
-	return value;
+    return value;
 }
 
 int List::removeAt(int index)
 {
-	// TODO: implement removeAt
+    ListNode* node = nodeAt(index);
+    if(node->prev != nullptr) node->prev->next = node->next;
+    return node->value;
 }
 
 bool List::remove(int value)
-{	
-	// TODO: implement remove
+{
+    // TODO: implement remove
+}
+
+
+ListNode* List::nodeAt(int index) {
+    if(index < 0){
+        cerr << "Index out of bounds" << endl;
+        exit(1);
+    }
+    ListNode* node = head;
+    while(index > 0) {
+        node = node->next;
+        if(node == nullptr)
+            return nullptr;
+        index--;
+    }
+    return node;
 }
 
 int List::at(int index)
 {
-	// TODO: implement at
+    return nodeAt(index)->value;
 }
 
 int valueOf(const ListNode* elem)
 {
-	// TODO: implement valueOf
+    return elem;
 }
 
 const ListNode* List::getNext(const ListNode* node)
 {
-	// TODO: imoplement getNext
+    return node->next;
 }
 
 const ListNode* List::getPrevious(const ListNode* node)
 {
-	// TODO: implement getPrevious
+    return node->prev;
 }
