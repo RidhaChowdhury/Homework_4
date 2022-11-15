@@ -22,7 +22,7 @@ private:
     ListNode* next;
 
 public:
-    ListNode() { prev = next = NULL; }
+    ListNode() { prev = next = nullptr; value = 0; }
     ListNode(int d, ListNode* p, ListNode* n) { value = d; prev = p; next = n; }
 
     friend class List;
@@ -35,10 +35,10 @@ private:
     ListNode* tail;
 
 public:
-    List() { head = tail = NULL; }
+    List() { head = tail = nullptr; }
     ~List();
 
-    bool isEmpty() { return head == NULL; }
+    bool isEmpty() { return head == nullptr; }
     bool contains(int value);
 
     void addToHead(int value);
@@ -107,13 +107,13 @@ int List::removeHead()
     if (head == tail)
     {
         delete tail;
-        head = tail = NULL;
+        head = tail = nullptr;
     }
     else
     {
         head = head->next;
         delete head->prev;
-        head->prev = NULL;
+        head->prev = nullptr;
     }
 
     return value;
@@ -125,13 +125,13 @@ int List::removeTail()
     if (head == tail)
     {
         delete tail;
-        head = tail = NULL;
+        head = tail = nullptr;
     }
     else
     {
         tail = tail->prev;
         delete tail->next;
-        tail->next = NULL;
+        tail->next = nullptr;
     }
 
     return value;
@@ -147,6 +147,7 @@ int List::removeAt(int index)
 bool List::remove(int value)
 {
     // TODO: implement remove
+    return false;
 }
 
 
@@ -172,7 +173,8 @@ int List::at(int index)
 
 int valueOf(const ListNode* elem)
 {
-    return elem;
+    // TODO: Implement this
+    return -1;
 }
 
 const ListNode* List::getNext(const ListNode* node)
