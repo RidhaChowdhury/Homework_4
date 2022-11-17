@@ -12,8 +12,6 @@
 // 
 //---------------------------------------------------------------------
 
-using namespace std;
-
 class ListNode
 {
 private:
@@ -22,9 +20,9 @@ private:
     ListNode* next;
 
 public:
-    ListNode() { prev = next = nullptr; value = 0; }
+    ListNode() { prev = next = nullptr; }
     ListNode(int d, ListNode* p, ListNode* n) { value = d; prev = p; next = n; }
-    int getValue() const { return value; }
+
     friend class List;
 };
 
@@ -49,14 +47,11 @@ public:
 
     int removeAt(int index);
     bool remove(int value);
-    void clear();
 
     int at(int index);
-    ListNode* nodeAt(int index);
-    ListNode* nodeWithValue(int value);
     static int valueOf(const ListNode* elem);
-    const ListNode* getNext(const ListNode* node);
-    const ListNode* getPrevious(const ListNode* node);
+    static const ListNode* getNext(const ListNode* node);
+    static const ListNode* getPrevious(const ListNode* node);
     const ListNode* getHead() { return head; }
     const ListNode* getTail() { return tail; }
 };
@@ -69,7 +64,7 @@ List::~List()
 
 bool List::contains(int value)
 {
-    ListNode *temp = head;
+    const ListNode *temp = getHead();
     while (temp != nullptr && temp->value != value)
         temp = temp->next;
 
@@ -140,53 +135,57 @@ int List::removeTail()
 
 int List::removeAt(int index)
 {
-    ListNode* node = nodeAt(index);
-    if(node->prev != nullptr) node->prev->next = node->next;
-    return node->value;
+    ListNode* temp = head;
+    while(index > 0 && temp != nullptr) {
+        temp = temp->next;
+        if(temp == nullptr) return -1;
+        index--;
+    }
+    if(temp == head) return removeHead();
+    if(temp == tail) return removeTail();
+    int value = temp->value;
+    if(temp->prev != nullptr) temp->prev->next = temp->next;
+    if(temp->next != nullptr) temp->next->prev = temp->prev;
+    return value;
 }
 
 bool List::remove(int value)
 {
-    ListNode* nodeToDelete = nodeWithValue(value);
-    if(nodeToDelete == nullptr) return false;
-    if(nodeToDelete->prev != nullptr) nodeToDelete->prev->next = nodeToDelete->next;
-    delete nodeToDelete;
+    ListNode *temp = head;
+    while (temp != nullptr && temp->value != value)
+        temp = temp->next;
+
+    if (temp == nullptr)
+        return false;
+
+    if (temp == head)
+        removeHead();
+    else if (temp == tail)
+        removeTail();
+    else
+    {
+        temp->prev->next = temp->next;
+        temp->next->prev = temp->prev;
+        delete temp;
+    }
+
     return true;
-}
-
-void List::clear() {
-    while(!isEmpty()) removeHead();
-}
-
-ListNode* List::nodeAt(int index) {
-    if(index < 0){
-        cerr << "Index out of bounds" << endl;
-        exit(1);
-    }
-    ListNode* node = head;
-    while(index > 0) {
-        node = node->next;
-        if(node == nullptr)
-            return nullptr;
-        index--;
-    }
-    return node;
 }
 
 int List::at(int index)
 {
-    return nodeAt(index)->value;
+    ListNode* temp = head;
+    while(index > 0 && temp != nullptr) {
+        temp = temp->next;
+        if(temp == nullptr) return -1;
+        index--;
+    }
+    return temp->value;
 }
 
-int List::valueOf(const ListNode *elem) {
-    return elem->getValue();
-}
-
-ListNode *List::nodeWithValue(int value) {
-    ListNode* node = head;
-    while(node != nullptr && node->value != value)
-        node = node->next;
-    return node;
+int List::valueOf(const ListNode* elem)
+{
+    return elem->value;
 }
 
 const ListNode* List::getNext(const ListNode* node)
