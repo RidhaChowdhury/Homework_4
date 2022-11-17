@@ -24,7 +24,7 @@ private:
 public:
     ListNode() { prev = next = nullptr; value = 0; }
     ListNode(int d, ListNode* p, ListNode* n) { value = d; prev = p; next = n; }
-
+    int getValue() const { return value; }
     friend class List;
 };
 
@@ -54,7 +54,7 @@ public:
     int at(int index);
     ListNode* nodeAt(int index);
     ListNode* nodeWithValue(int value);
-    int valueOf(const ListNode* elem);
+    static int valueOf(const ListNode* elem);
     const ListNode* getNext(const ListNode* node);
     const ListNode* getPrevious(const ListNode* node);
     const ListNode* getHead() { return head; }
@@ -147,8 +147,11 @@ int List::removeAt(int index)
 
 bool List::remove(int value)
 {
-    // TODO: implement remove
-    return false;
+    ListNode* nodeToDelete = nodeWithValue(value);
+    if(nodeToDelete == nullptr) return false;
+    if(nodeToDelete->prev != nullptr) nodeToDelete->prev->next = nodeToDelete->next;
+    delete nodeToDelete;
+    return true;
 }
 
 void List::clear() {
@@ -175,10 +178,15 @@ int List::at(int index)
     return nodeAt(index)->value;
 }
 
-int valueOf(const ListNode* elem)
-{
-    // TODO: Implement this
-    return -1;
+int List::valueOf(const ListNode *elem) {
+    return elem->getValue();
+}
+
+ListNode *List::nodeWithValue(int value) {
+    ListNode* node = head;
+    while(node != nullptr && node->value != value)
+        node = node->next;
+    return node;
 }
 
 const ListNode* List::getNext(const ListNode* node)
