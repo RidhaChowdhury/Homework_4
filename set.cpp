@@ -13,9 +13,13 @@
 //---------------------------------------------------------------------
 
 #include <iostream>
+#include <utility>
+#include <vector>
 #include "list.h"
 
 using namespace std;
+
+#pragma region Set Data Structure
 
 class Set
 {
@@ -100,67 +104,148 @@ void Set::print() {
     }
     cout << endl;
 }
+#pragma endregion
 
+#pragma region Commands
+Set* one = new Set();
+Set* two = new Set();
+
+
+/*
+ * o contains <value> <set>
+- Invoke the contains function on the specified set, passing value as its
+parameter, print true or false based on result.
+o add <value> <set>
+- Invoke the add function on the specified set, passing index as its
+parameter, print true or false based on result.
+o remove <value> <set>
+- Invoke the remove function on the specified set, passing value as its
+parameter, print true or false based on the result.
+o print <set>
+- Invoke the print function on the specified set
+o union
+- Invoke the set_union function on the first set, passing the second set
+as its parameter. Print the contents of the resulting set.
+o intersection
+- Invoke the intersection function on the first set, passing the second
+set as its parameter. Print the contents of the resulting set.
+o difference
+- Invoke the difference function twice. Invoke on the first set, passing
+the second set as the parameter, and also invoke on the second set
+passing the first set as the parameter. Print the contents of both
+resulting sets.
+o quit
+- Break out of loop, exit program normally.
+
+ Enter starting size of Set #1: 2
+Enter starting size of Set #2: 4
+Enter 2 values for Set #1: 1 2
+Enter 4 values for Set #2: 4 3 2 1
+
+ Now accepting commands (quit to exit program):
+> print 1
+set elements(2): 1 2
+> union
+Union: 1 2 3 4
+> remove 4 2
+true
+> print 2
+set elements(3): 3 2 1
+> add 5 1
+true
+> print 1
+set elements(3): 1 2 5
+> difference
+First – Second: 5
+Second – First: 4 3
+> quit
+Exiting Program.
+ */
 int main() {
+    int aSize, bSize;
+    cout << "Enter starting size of Set #1: ";
+    cin >> aSize;
+    cout << "Enter starting size of Set #2: ";
+    cin >> bSize;
 
-    // Create two sets
-    Set* set1 = new Set();
-    Set* set2 = new Set();
-
-    // Add some values to set1
-    set1->add(1);
-    set1->add(2);
-    set1->add(3);
-    set1->add(4);
-    set1->add(5);
-    set1->add(6);
-    set1->remove(6);
-
-    // Add some values to set2
-    set2->add(3);
-    set2->add(4);
-    set2->add(5);
-    set2->add(6);
-    set2->add(7);
-
-    // Print the sets
-    cout << "Set 1: ";
-    set1->print();
-    cout << endl;
-    cout << "Set 2: ";
-    set2->print();
     cout << endl;
 
-    // Create a set that is the union of set1 and set2
-    Set* set3 = new Set();
-    set3 = set1->set_union(*set2);
-    cout << "Set 3 (union of set1 and set2): ";
-    set3->print();
-    cout << endl;
+    cout << "Enter " << aSize << " values for Set #1: ";
+    for(int index = 0; index < aSize; index++) {
+        int value;
+        cin >> value;
+        one->add(value);
+    }
 
-    // Create a set that is the intersection of set1 and set2
-    Set* set4 = set1->intersection(*set2);
-    cout << "Set 4 (intersection of set1 and set2): ";
-    set4->print();
-    cout << endl;
+    cout << "Enter " << bSize << " values for Set #2: ";
+    for(int index = 0; index < bSize; index++) {
+        int value;
+        cin >> value;
+        two->add(value);
+    }
 
-    // Create a set that is the difference of set1 and set2
-    Set* set5 = set1->difference(*set2);
-    cout << "Set 5 (difference of set1 and set2): ";
-    set5->print();
-    cout << endl;
-
-    // Create a set that is the difference of set2 and set1
-    Set* set6 = set2->difference(*set1);
-    cout << "Set 6 (difference of set2 and set1): ";
-    set6->print();
-    cout << endl;
-
-    // Delete the sets
-    delete set3;
-    delete set4;
-    delete set5;
-    delete set6;
+    cout << "Now accepting commands (quit to exit program):" << endl;
+    // Run loop
+    bool inUse = true;
+    while (inUse) {
+        string command;
+        cout << "> ";
+        cin >> command;
+        // make a switch statement that calls the appropriate function on the appropriate set based on the command
+        if(command == "contains") {
+            int value, set;
+            cin >> value >> set;
+            Set* currentSet = set == 1 ? one : two;
+            currentSet->contains(value) ? cout << "true" << endl : cout << "false" << endl;
+        }
+        else if(command == "add") {
+            int value, set;
+            cin >> value >> set;
+            Set* currentSet = set == 1 ? one : two;
+            currentSet->add(value) ? cout << "true" << endl : cout << "false" << endl;
+        }
+        else if(command == "remove") {
+            int value, set;
+            cin >> value >> set;
+            Set* currentSet = set == 1 ? one : two;
+            currentSet->remove(value) ? cout << "true" << endl : cout << "false" << endl;
+        }
+        else if(command == "print") {
+            int set;
+            cin >> set;
+            Set* currentSet = set == 1 ? one : two;
+            cout << "set elements(" << currentSet->size() << "): ";
+            currentSet->print();
+        }
+        else if(command == "union") {
+            Set* unionSet = one->set_union(*two);
+            cout << "Union: ";
+            unionSet->print();
+            delete unionSet;
+        }
+        else if(command == "intersection") {
+            Set* intersection = one->intersection(*two);
+            cout << "Intersection: ";
+            intersection->print();
+            delete intersection;
+        }
+        else if(command == "difference") {
+            Set* firstMinusSecond = one->difference(*two);
+            Set* secondMinusFirst = two->difference(*one);
+            cout << "First – Second: ";
+            firstMinusSecond->print();
+            cout << "Second – First: ";
+            secondMinusFirst->print();
+            delete firstMinusSecond;
+            delete secondMinusFirst;
+        }
+        else if(command == "quit") {
+            inUse = false;
+        }
+    }
+    cout << "Exiting Program." << endl;
+    delete one;
+    delete two;
 
     return 0;
 }
