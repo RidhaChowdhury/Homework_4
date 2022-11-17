@@ -7,4 +7,5 @@ include_directories(.)
 
 add_executable(Homework_4
         list.h
-        )
+        set.cpp
+        main.cpp main.h)

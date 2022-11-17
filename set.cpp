@@ -71,7 +71,10 @@ Set *Set::set_union(Set &) {
 Set *Set::intersection(Set &otherSet) {
     Set *intersection = new Set();
     for(int index = 0; index < this->size(); index++)
-        if(!otherSet.contains(this->list->at(index))) intersection->add(this->list->at(index));
+        if(otherSet.contains(this->list->at(index))) intersection->add(this->list->at(index));
+    for(int index = 0; index < otherSet.size(); index++)
+        if(this->contains(otherSet.list->at(index))) intersection->add(otherSet.list->at(index));
+
     return intersection;
 }
 
@@ -83,7 +86,3 @@ void Set::print() {
     const ListNode* node = list->getHead();
 }
 
-int main()
-{
-
-}
